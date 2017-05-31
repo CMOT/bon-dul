@@ -5,17 +5,27 @@
  */
 package com.reports.ui;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author ASUS
  */
 public class Main extends javax.swing.JFrame {
 
+    
+    public static int CONTADOR=0;
+    int totalLines;
+    ExcelReader reader;
+    JFileChooser fileChooser;
     /**
      * Creates new form Main
      */
     public Main() {
         initComponents();
+        reader= new ExcelReader();
+        fileChooser = new JFileChooser();
     }
 
     /**
@@ -55,17 +65,24 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 634, Short.MAX_VALUE)
+            .addGap(0, 643, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 258, Short.MAX_VALUE)
+            .addGap(0, 419, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        
+        fileChooser.showOpenDialog(null);
+        File[] files= fileChooser.getSelectedFiles();
+        totalLines=reader.countTotalLines(files);
+        System.out.println("Lineas totales: "+totalLines );
+//        String customPath="C:/Users/Cesar/Documents/NetBeansProjects/archivos/Incidencias.xlsx";
+        reader.readAllFiles(files);
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
