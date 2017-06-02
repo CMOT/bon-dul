@@ -5,8 +5,12 @@
  */
 package com.reports.ui;
 
+import com.reports.model.RowDTO;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -17,15 +21,19 @@ public class NominaPanel extends javax.swing.JPanel {
     public static int CONTADOR=0;
     int totalLines;
     ExcelReader reader;
+    ExcelWriter writer;
     JFileChooser fileChooser;
+    ArrayList<RowDTO> listRows;
+    File[] files;
     /**
      * Creates new form NominaPanel
      */
     public NominaPanel() {
         initComponents();
-        reader= new ExcelReader();
         fileChooser = new JFileChooser();
-        fileChooser.setMultiSelectionEnabled(true);
+        FileNameExtensionFilter filtroExcel=new FileNameExtensionFilter("Xlsx","xlsx");
+        fileChooser.setFileFilter(filtroExcel);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     }
 
     /**
@@ -39,10 +47,11 @@ public class NominaPanel extends javax.swing.JPanel {
 
         progressBar = new javax.swing.JProgressBar();
         btnLoadFiles = new javax.swing.JButton();
-        lblFiles = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtAreaLog = new javax.swing.JTextArea();
-        btnFInish = new javax.swing.JButton();
+        btnExport = new javax.swing.JButton();
+        btnGenerar = new javax.swing.JButton();
+        listFiles = new java.awt.List();
 
         btnLoadFiles.setText("Cargar archivos");
         btnLoadFiles.addActionListener(new java.awt.event.ActionListener() {
@@ -51,15 +60,32 @@ public class NominaPanel extends javax.swing.JPanel {
             }
         });
 
-        lblFiles.setBackground(new java.awt.Color(255, 255, 255));
-
         txtAreaLog.setEditable(false);
         txtAreaLog.setColumns(20);
         txtAreaLog.setRows(5);
         jScrollPane1.setViewportView(txtAreaLog);
 
-        btnFInish.setText("Fnializar");
-        btnFInish.setEnabled(false);
+        btnExport.setText("Exportar");
+        btnExport.setEnabled(false);
+        btnExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportActionPerformed(evt);
+            }
+        });
+
+        btnGenerar.setText("Generar Consolidado");
+        btnGenerar.setEnabled(false);
+        btnGenerar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarActionPerformed(evt);
+            }
+        });
+
+        listFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listFilesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -70,49 +96,113 @@ public class NominaPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(btnLoadFiles)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblFiles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnGenerar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnLoadFiles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(listFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(94, 94, 94))
                             .addComponent(progressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnFInish)))
+                        .addComponent(btnExport)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnLoadFiles)
-                    .addComponent(lblFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnLoadFiles)
+                        .addGap(13, 13, 13)
+                        .addComponent(btnGenerar))
+                    .addComponent(listFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnFInish)
-                .addGap(28, 28, 28))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExport)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoadFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadFilesActionPerformed
-        fileChooser.showOpenDialog(this);
-        File[] files= fileChooser.getSelectedFiles();
-        totalLines=reader.countTotalLines(files);
-        System.out.println("tamaño archivos "+totalLines);
-        progressBar.setMaximum(totalLines);
-        reader.readAllFiles(files);
+        try{
+            fileChooser.setMultiSelectionEnabled(true);
+            int opcion=fileChooser.showOpenDialog(this);
+            if(opcion==JFileChooser.APPROVE_OPTION){
+                btnExport.setEnabled(false);
+                progressBar.setValue(0);
+                listFiles.removeAll();
+                files=null;
+                files= fileChooser.getSelectedFiles();
+                for(int i=0; i<files.length; i++){
+                    listFiles.add(files[i].getName());
+                }
+                reader= new ExcelReader();
+                totalLines=reader.countTotalLines(files);
+                System.out.println("tamaño archivos "+totalLines);
+                progressBar.setMaximum(totalLines);
+                txtAreaLog.setText("");
+                if(listFiles.getItemCount()>0){
+                    btnGenerar.setEnabled(true);
+                }else{
+                    btnGenerar.setEnabled(false);
+                }
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error al cargar archivos: Error 1");
+        }
+        
     }//GEN-LAST:event_btnLoadFilesActionPerformed
+
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+        try{
+            fileChooser.setMultiSelectionEnabled(false);
+            int opcion=fileChooser.showSaveDialog(this);
+            if(opcion==JFileChooser.APPROVE_OPTION){
+                File file = fileChooser.getSelectedFile();
+                writer= new ExcelWriter();
+                writer.createConsolidado(file.getAbsolutePath(), listRows);    
+                fileChooser.setSelectedFile(null);
+                btnGenerar.setEnabled(true);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error al exportar: Error 6");
+        }
+    }//GEN-LAST:event_btnExportActionPerformed
+
+    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
+        try{
+            if(files!=null){
+                btnLoadFiles.setEnabled(false);
+                btnGenerar.setEnabled(false);
+                listRows=reader.readAllFiles(files);
+                fileChooser.setSelectedFile(null);
+                fileChooser.setSelectedFiles(null);
+                btnExport.setEnabled(true);
+                btnLoadFiles.setEnabled(true);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error al leer archivos: Error 2");
+        }
+    }//GEN-LAST:event_btnGenerarActionPerformed
+
+    private void listFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listFilesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_listFilesActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnFInish;
+    private javax.swing.JButton btnExport;
+    private javax.swing.JButton btnGenerar;
     private javax.swing.JButton btnLoadFiles;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblFiles;
+    private java.awt.List listFiles;
     public static javax.swing.JProgressBar progressBar;
     public static javax.swing.JTextArea txtAreaLog;
     // End of variables declaration//GEN-END:variables

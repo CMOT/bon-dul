@@ -24,13 +24,10 @@ public class RowDTO {
     private String domingo;
     private String PD;
     private String DT;
-    private String lunesTE;
-    private String martesTE;
-    private String miercolesTE;
-    private String juevesTE;
-    private String viernesTE;
-    private String sabadoTE;
-    private String domingoTE;
+    private String vac;
+    private String faltas;
+    private String FET;
+    private String comedor;
     private String observaciones;
 
     /**
@@ -230,104 +227,6 @@ public class RowDTO {
     }
 
     /**
-     * @return the lunesTE
-     */
-    public String getLunesTE() {
-        return lunesTE;
-    }
-
-    /**
-     * @param lunesTE the lunesTE to set
-     */
-    public void setLunesTE(String lunesTE) {
-        this.lunesTE = lunesTE;
-    }
-
-    /**
-     * @return the martesTE
-     */
-    public String getMartesTE() {
-        return martesTE;
-    }
-
-    /**
-     * @param martesTE the martesTE to set
-     */
-    public void setMartesTE(String martesTE) {
-        this.martesTE = martesTE;
-    }
-
-    /**
-     * @return the miercolesTE
-     */
-    public String getMiercolesTE() {
-        return miercolesTE;
-    }
-
-    /**
-     * @param miercolesTE the miercolesTE to set
-     */
-    public void setMiercolesTE(String miercolesTE) {
-        this.miercolesTE = miercolesTE;
-    }
-
-    /**
-     * @return the juevesTE
-     */
-    public String getJuevesTE() {
-        return juevesTE;
-    }
-
-    /**
-     * @param juevesTE the juevesTE to set
-     */
-    public void setJuevesTE(String juevesTE) {
-        this.juevesTE = juevesTE;
-    }
-
-    /**
-     * @return the viernesTE
-     */
-    public String getViernesTE() {
-        return viernesTE;
-    }
-
-    /**
-     * @param viernesTE the viernesTE to set
-     */
-    public void setViernesTE(String viernesTE) {
-        this.viernesTE = viernesTE;
-    }
-
-    /**
-     * @return the sabadoTE
-     */
-    public String getSabadoTE() {
-        return sabadoTE;
-    }
-
-    /**
-     * @param sabadoTE the sabadoTE to set
-     */
-    public void setSabadoTE(String sabadoTE) {
-        this.sabadoTE = sabadoTE;
-    }
-
-    /**
-     * @return the domingoTE
-     */
-    public String getDomingoTE() {
-        return domingoTE;
-    }
-
-    /**
-     * @param domingoTE the domingoTE to set
-     */
-    public void setDomingoTE(String domingoTE) {
-        this.domingoTE = domingoTE;
-    }
-
-    /**
      * @return the observaciones
      */
     public String getObservaciones() {
@@ -340,7 +239,61 @@ public class RowDTO {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
-    
-    
+
+    /**
+     * @return the vac
+     */
+    public String getVac() {
+        return vac;
+    }
+
+    /**
+     * @param vac the vac to set
+     */
+    public void setVac(String vac) {
+        this.vac = vac;
+    }
+
+    /**
+     * @return the faltas
+     */
+    public String getFaltas() {
+        return faltas;
+    }
+
+    /**
+     * @param faltas the faltas to set
+     */
+    public void setFaltas(String faltas) {
+        this.faltas = faltas;
+    }
+
+    /**
+     * @return the FET
+     */
+    public String getFET() {
+        return FET;
+    }
+
+    /**
+     * @param FET the FET to set
+     */
+    public void setFET(String FET) {
+        this.FET = FET;
+    }
+
+    /**
+     * @return the comedor
+     */
+    public String getComedor() {
+        return comedor;
+    }
+
+    /**
+     * @param comedor the comedor to set
+     */
+    public void setComedor(String comedor) {
+        this.comedor = comedor;
+    }
     
 }

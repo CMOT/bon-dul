@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -37,14 +38,13 @@ public class ExcelReader {
         int counter=0;
         for (int k=0; k< files.length; k++) {
             File actual= files[k];
-            System.out.println("Archvio path: "+ actual.getPath());
             XSSFWorkbook hssfWorkbook = null;
             XSSFSheet hssfSheet;
              try (InputStream is = new FileInputStream(actual)) {
                 hssfWorkbook = new XSSFWorkbook(is);
                 is.close();
             }catch (IOException e) {
-                Logger.getLogger(ExcelReader.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                JOptionPane.showMessageDialog(null, "Error al leer archivo: Error 7..");
             }
             if (hssfWorkbook != null) {
                 for (int i = 0; i < 1; i++) {
@@ -65,41 +65,36 @@ public class ExcelReader {
         return counter;
     }
     
-    public void readAllFiles(File[] files) {
+    public ArrayList<RowDTO> readAllFiles(File[] files) {
         
-//        System.out.println("Path: " + path);
-//        File[] files = getFiles(path);
         for (int k=0; k< files.length; k++) {
             File actual= files[k];
-            System.out.println("Archvio path: "+ actual.getPath());
             XSSFWorkbook hssfWorkbook = null;
             XSSFSheet hssfSheet;
             try (InputStream is = new FileInputStream(actual)) {
                 hssfWorkbook = new XSSFWorkbook(is);
                 is.close();
             }catch (IOException e) {
-                Logger.getLogger(ExcelReader.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                JOptionPane.showMessageDialog(null, "Error al leer archivo: Error 7..");
             }
             if (hssfWorkbook != null) {
                 for (int i = 0; i < 1; i++) {
-                    System.out.println("hoja numero: " + i);
                     hssfSheet = hssfWorkbook.getSheetAt(i);
                     readNotEmptyRows(hssfSheet);
-                    System.out.println("\n************************************************\n"
-                            + "************************************************\n");
                 }
             }
         }
-        System.out.println("Cantidad de registros: "+ listRows.size());
+        return listRows;
     }
 
     public void readNotEmptyRows(XSSFSheet sheet) {
         RowDTO dto;
         for (int i = 0; i < sheet.getLastRowNum(); i++) {
+            columnReader= new ColumnReader();
             XSSFRow row = sheet.getRow(i);
             if (row != null) {
                 dto = new RowDTO();
-                dto = readNotEmptyCells(row, dto, i);
+                dto = readNotEmptyCells(row, dto);
                 if(dto!=null){  
                     listRows.add(dto);
                     NominaPanel.progressBar.setValue(listRows.size());
@@ -109,7 +104,7 @@ public class ExcelReader {
         }
     }
 
-    public RowDTO readNotEmptyCells(XSSFRow row, RowDTO dto, int indexColumn) {
+    public RowDTO readNotEmptyCells(XSSFRow row, RowDTO dto) {
         XSSFCell cell= row.getCell(0);
         if(cell==null || columnReader.getValieByTypeCell(cell).isEmpty() || Character.isLetter(columnReader.getValieByTypeCell(cell).charAt(0)) ){
            return null;
@@ -118,23 +113,20 @@ public class ExcelReader {
             dto.setNombre(columnReader.getColumnDefaultValue(row.getCell(1)));
             dto.setLinea(columnReader.getColumnDefaultValue(row.getCell(2)));
             dto.setTiempoExtra(columnReader.getColumnDefaultValue(row.getCell(3)));
-            dto.setLunes(columnReader.getColumnDefaultValue(row.getCell(4)));
-            dto.setMartes(columnReader.getColumnDefaultValue(row.getCell(5)));
-            dto.setMiercoles(columnReader.getColumnDefaultValue(row.getCell(6)));
-            dto.setJueves(columnReader.getColumnDefaultValue(row.getCell(7)));
-            dto.setViernes(columnReader.getColumnDefaultValue(row.getCell(8)));
-            dto.setSabado(columnReader.getColumnDefaultValue(row.getCell(9)));
-            dto.setDomingo(columnReader.getColumnDefaultValue(row.getCell(10)));
-            dto.setLunesTE(columnReader.getColumnDefaultValue(row.getCell(11)));
-            dto.setMartesTE(columnReader.getColumnDefaultValue(row.getCell(12)));
-            dto.setMiercolesTE(columnReader.getColumnDefaultValue(row.getCell(13)));
-            dto.setJuevesTE(columnReader.getColumnDefaultValue(row.getCell(14)));
-            dto.setViernesTE(columnReader.getColumnDefaultValue(row.getCell(15)));
-            dto.setSabadoTE(columnReader.getColumnDefaultValue(row.getCell(16)));
-            dto.setDomingoTE(columnReader.getColumnDefaultValue(row.getCell(17)));
-            dto.setPD(columnReader.getColumnDefaultValue(row.getCell(18)));
-            dto.setDT(columnReader.getColumnDefaultValue(row.getCell(19)));
-            dto.setObservaciones(columnReader.getColumnDefaultValue(row.getCell(20)));
+            dto.setLunes(columnReader.getColumnAndSumLetter(row.getCell(4)));
+            dto.setMartes(columnReader.getColumnAndSumLetter(row.getCell(5)));
+            dto.setMiercoles(columnReader.getColumnAndSumLetter(row.getCell(6)));
+            dto.setJueves(columnReader.getColumnAndSumLetter(row.getCell(7)));
+            dto.setViernes(columnReader.getColumnAndSumLetter(row.getCell(8)));
+            dto.setSabado(columnReader.getColumnAndSumLetter(row.getCell(9)));
+            dto.setDomingo(columnReader.getColumnAndSumLetter(row.getCell(10)));
+            dto.setPD(columnReader.getColumnPD(cell,dto));
+            dto.setDT(columnReader.getColumnDT(cell,dto));
+            dto.setVac(String.valueOf(columnReader.getCantidadV()));
+            dto.setFaltas(String.valueOf(columnReader.getCantidadF()));
+            dto.setFET(String.valueOf(columnReader.getCantidadFET()));
+            dto.setComedor(String.valueOf(columnReader.getCantidadA()+columnReader.getCantidadDT()+columnReader.getCantidadFET()));
+            dto.setObservaciones(columnReader.getColumnDefaultValue(row.getCell(22)));
         }
         return dto;
     }

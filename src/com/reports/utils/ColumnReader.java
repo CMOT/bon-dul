@@ -1,5 +1,6 @@
 package com.reports.utils;
 
+import com.reports.model.RowDTO;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
 /*
@@ -14,10 +15,18 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
  */
 public class ColumnReader {
     
+    private int cantidadA;
+    private int cantidadDT;
+    private int cantidadV;
+    private int cantidadF;
+    private int cantidadFET;
     
     public ColumnReader(){
-        
-        
+        cantidadA=0;
+        cantidadDT=0;
+        cantidadV=0;
+        cantidadF=0;
+        cantidadFET=0;
     }
     
     public String getColumnDefaultValue(XSSFCell cell){
@@ -27,6 +36,53 @@ public class ColumnReader {
         }
         return value;
     }
+    public String getColumnPD(XSSFCell cell, RowDTO row){
+        String value="0";
+        if(row.getDomingo().compareToIgnoreCase("A")==0 || row.getDomingo().compareToIgnoreCase("DT")==0){
+                value="1";
+        }
+        return value;
+    }
+    
+    public String getColumnDT(XSSFCell cell, RowDTO row){
+        String value="";
+        int suma=cantidadDT;
+        if(row.getDomingo().compareToIgnoreCase("A")==0 ){
+            suma=cantidadDT+ 1;
+        }
+        value=String.valueOf(suma);
+        return value;
+    }
+    
+    public String getColumnAndSumLetter(XSSFCell cell){
+        String value="";
+        if(cell!=null){
+            value=getValieByTypeCell(cell);
+        }
+        sumLetter(value);
+        return value;
+    }
+    
+    public void sumLetter(String letter){
+        switch(letter){
+            case "A":
+                cantidadA++;
+                break;
+            case "DT":
+                cantidadDT++;
+                break;
+            case "V":
+                cantidadV++;
+                break;
+            case "FET":
+                cantidadFET++;
+                break;
+            case "F":
+                cantidadF++;
+                break;
+        }
+    }
+    
     
     public String getColumnB(XSSFCell cell){
         String value="";
@@ -41,7 +97,7 @@ public class ColumnReader {
         if(cell!=null){
             switch (cell.getCellType()) {
                 case 0:
-                    value= String.valueOf(cell.getNumericCellValue());
+                    value= String.valueOf((int)cell.getNumericCellValue());
                     break;
                 case 1:
                     value= String.valueOf( cell.getStringCellValue());
@@ -55,4 +111,76 @@ public class ColumnReader {
         }
         return value;
     }
+
+    /**
+     * @return the cantidadA
+     */
+    public int getCantidadA() {
+        return cantidadA;
+    }
+
+    /**
+     * @param cantidadA the cantidadA to set
+     */
+    public void setCantidadA(int cantidadA) {
+        this.cantidadA = cantidadA;
+    }
+
+    /**
+     * @return the cantidadDT
+     */
+    public int getCantidadDT() {
+        return cantidadDT;
+    }
+
+    /**
+     * @param cantidadDT the cantidadDT to set
+     */
+    public void setCantidadDT(int cantidadDT) {
+        this.cantidadDT = cantidadDT;
+    }
+
+    /**
+     * @return the cantidadV
+     */
+    public int getCantidadV() {
+        return cantidadV;
+    }
+
+    /**
+     * @param cantidadV the cantidadV to set
+     */
+    public void setCantidadV(int cantidadV) {
+        this.cantidadV = cantidadV;
+    }
+
+    /**
+     * @return the cantidadF
+     */
+    public int getCantidadF() {
+        return cantidadF;
+    }
+
+    /**
+     * @param cantidadF the cantidadF to set
+     */
+    public void setCantidadF(int cantidadF) {
+        this.cantidadF = cantidadF;
+    }
+
+    /**
+     * @return the cantidadFET
+     */
+    public int getCantidadFET() {
+        return cantidadFET;
+    }
+
+    /**
+     * @param cantidadFET the cantidadFET to set
+     */
+    public void setCantidadFET(int cantidadFET) {
+        this.cantidadFET = cantidadFET;
+    }
+    
+    
 }
