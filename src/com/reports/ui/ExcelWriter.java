@@ -69,6 +69,7 @@ public class ExcelWriter {
     
     public void fillRow(XSSFRow row, RowDTO dto){
         try{
+           int line=row.getRowNum()+1;
             //Area
            XSSFCell cell = row.createCell(0, XSSFCell.CELL_TYPE_STRING);
            cell.setCellValue("Area");
@@ -118,12 +119,19 @@ public class ExcelWriter {
            cell.setCellValue(dto.getDomingo());
 
            //PD
-           cell = row.createCell(12, XSSFCell.CELL_TYPE_NUMERIC);
-           cell.setCellValue(Double.parseDouble(dto.getPD()));
+//           cell = row.createCell(12, XSSFCell.CELL_TYPE_NUMERIC);
+//           cell.setCellValue(Double.parseDouble(dto.getPD()));
+           
+           //PD
+           cell = row.createCell(12, XSSFCell.CELL_TYPE_STRING);
+           cell.setCellValue("=CONTAR.SI(L"+line+",\"A\")+CONTAR.SI(L"+line+",\"DT\")");
 
            //DT
-           cell = row.createCell(13, XSSFCell.CELL_TYPE_NUMERIC);
-           cell.setCellValue(Double.parseDouble(dto.getDT()));
+//           cell = row.createCell(13, XSSFCell.CELL_TYPE_NUMERIC);
+//           cell.setCellValue(Double.parseDouble(dto.getDT()));
+           //DT
+           cell = row.createCell(13, XSSFCell.CELL_TYPE_FORMULA);
+           cell.setCellValue("CONTAR.SI(F"+line+":L"+line+",\"DT\")+CONTAR.SI(L"+line+",\"A\")");
 
            //Vac
            cell = row.createCell(14, XSSFCell.CELL_TYPE_NUMERIC);
@@ -165,7 +173,7 @@ public class ExcelWriter {
            cell = row.createCell(23, XSSFCell.CELL_TYPE_NUMERIC);
            cell.setCellValue(40);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Error al Crear datos: Error 10");
+            JOptionPane.showMessageDialog(null, "Error al Crear datos: Error 10: "+ e);
         }
     }
    
