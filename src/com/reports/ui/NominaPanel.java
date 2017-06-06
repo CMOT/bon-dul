@@ -155,7 +155,7 @@ public class NominaPanel extends javax.swing.JPanel {
                 }
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Error al cargar archivos: Error 1");
+            JOptionPane.showMessageDialog(null, "Error al cargar archivos: Error 1:"+e);
         }
         
     }//GEN-LAST:event_btnLoadFilesActionPerformed
@@ -172,7 +172,7 @@ public class NominaPanel extends javax.swing.JPanel {
                 btnGenerar.setEnabled(true);
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Error al exportar: Error 6");
+            JOptionPane.showMessageDialog(null, "Error al exportar: Error 6:"+e);
         }
     }//GEN-LAST:event_btnExportActionPerformed
 
@@ -188,12 +188,12 @@ public class NominaPanel extends javax.swing.JPanel {
                 btnLoadFiles.setEnabled(true);
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Error al leer archivos: Error 2");
+            JOptionPane.showMessageDialog(null, "Error al leer archivos: Error 2:"+e);
         }
     }//GEN-LAST:event_btnGenerarActionPerformed
 
     private void listFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listFilesActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_listFilesActionPerformed
 
 

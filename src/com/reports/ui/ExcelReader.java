@@ -5,6 +5,7 @@
  */
 package com.reports.ui;
 
+import com.reports.model.Incidencia;
 import com.reports.utils.ColumnReader;
 import com.reports.model.RowDTO;
 import java.io.File;
@@ -26,6 +27,7 @@ public class ExcelReader {
 
     ArrayList<RowDTO> listRows;
     ColumnReader columnReader;
+    Incidencia incidencia;
 
     public ExcelReader() {
         listRows = new ArrayList<RowDTO>();
@@ -42,20 +44,24 @@ public class ExcelReader {
                 hssfWorkbook = new XSSFWorkbook(is);
                 is.close();
             }catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Error al leer archivo: Error 7..");
+                JOptionPane.showMessageDialog(null, "Error al leer archivo: Error 7.."+e);
             }
             if (hssfWorkbook != null) {
-                for (int i = 0; i < 1; i++) {
-                    hssfSheet = hssfWorkbook.getSheetAt(i);
-                    for (int j = 0; j < hssfSheet.getLastRowNum(); j++) {
-                       XSSFRow row = hssfSheet.getRow(j);
-                       if (row != null) {
-                            XSSFCell cell= row.getCell(0);
-                            if(cell==null || columnReader.getValieByTypeCell(cell).isEmpty() || Character.isLetter(columnReader.getValieByTypeCell(cell).charAt(0))){
-                            }else{
-                                counter++;
-                            }
-                       }
+                incidencia= new Incidencia("PRODUCCION");
+//                incidencia= new Incidencia(types[k]);
+                if(incidencia.getColumns()!=null){
+                    for (int i = 0; i < incidencia.getSheetCount(); i++) {
+                        hssfSheet = hssfWorkbook.getSheetAt(i);
+                        for (int j = 0; j < hssfSheet.getLastRowNum(); j++) {
+                           XSSFRow row = hssfSheet.getRow(j);
+                           if (row != null) {
+                                XSSFCell cell= row.getCell(0);
+                                if(cell==null || columnReader.getValieByTypeCell(cell).isEmpty() || Character.isLetter(columnReader.getValieByTypeCell(cell).charAt(0))){
+                                }else{
+                                    counter++;
+                                }
+                           }
+                        }
                     }
                 }
             }
@@ -73,10 +79,11 @@ public class ExcelReader {
                 hssfWorkbook = new XSSFWorkbook(is);
                 is.close();
             }catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Error al leer archivo: Error 7..");
+                JOptionPane.showMessageDialog(null, "Error al leer archivo: Error 7..:"+e);
             }
             if (hssfWorkbook != null) {
-                for (int i = 0; i < 1; i++) {
+                incidencia= new Incidencia("PRODUCCION");
+                for (int i = 0; i < incidencia.getSheetCount(); i++) {
                     hssfSheet = hssfWorkbook.getSheetAt(i);
                     readNotEmptyRows(hssfSheet);
                 }
@@ -93,40 +100,52 @@ public class ExcelReader {
             if (row != null) {
                 dto = new RowDTO();
                 dto = readNotEmptyCells(row, dto);
-                if(dto!=null){  
+                if(dto!=null){
                     listRows.add(dto);
                     NominaPanel.progressBar.setValue(listRows.size());
-                    NominaPanel.txtAreaLog.append(dto.getNumero()+"\t"+dto.getNombre()+"\n\r");
+                    NominaPanel.txtAreaLog.append(dto.getArea()+"\t"+dto.getNumero() +"\t"+ dto.getNombre() + "\n\r");
                 }
             }
         }
     }
 
     public RowDTO readNotEmptyCells(XSSFRow row, RowDTO dto) {
-        XSSFCell cell= row.getCell(0);
-        if(cell==null || columnReader.getValieByTypeCell(cell).isEmpty() || Character.isLetter(columnReader.getValieByTypeCell(cell).charAt(0)) ){
+        XSSFCell cell= row.getCell(incidencia.getColumns()[0]);
+        if(invalidId(cell)){
            return null;
         }else{
-            dto.setNumero(columnReader.getColumnDefaultValue(row.getCell(0)));
-            dto.setNombre(columnReader.getColumnDefaultValue(row.getCell(1)));
-            dto.setLinea(columnReader.getColumnDefaultValue(row.getCell(2)));
-            dto.setTiempoExtra(columnReader.getColumnDefaultValue(row.getCell(4)));
-            dto.setLunes(columnReader.getColumnAndSumLetter(row.getCell(5)));
-            dto.setMartes(columnReader.getColumnAndSumLetter(row.getCell(6)));
-            dto.setMiercoles(columnReader.getColumnAndSumLetter(row.getCell(7)));
-            dto.setJueves(columnReader.getColumnAndSumLetter(row.getCell(8)));
-            dto.setViernes(columnReader.getColumnAndSumLetter(row.getCell(9)));
-            dto.setSabado(columnReader.getColumnAndSumLetter(row.getCell(10)));
-            dto.setDomingo(columnReader.getColumnAndSumLetter(row.getCell(11)));
+            dto.setArea(incidencia.getType());
+            dto.setEmpresa("OAM");
+            dto.setNumero(columnReader.getColumnDefaultValue(row.getCell(incidencia.getColumns()[0])));
+            dto.setNombre(columnReader.getColumnDefaultValue(row.getCell(incidencia.getColumns()[1])));
+            dto.setTiempoExtra(columnReader.getColumnDefaultValue(row.getCell(incidencia.getColumns()[2])));
+            dto.setLunes(columnReader.getColumnAndSumLetter(row.getCell(incidencia.getColumns()[3])));
+            dto.setMartes(columnReader.getColumnAndSumLetter(row.getCell(incidencia.getColumns()[4])));
+            dto.setMiercoles(columnReader.getColumnAndSumLetter(row.getCell(incidencia.getColumns()[5])));
+            dto.setJueves(columnReader.getColumnAndSumLetter(row.getCell(incidencia.getColumns()[6])));
+            dto.setViernes(columnReader.getColumnAndSumLetter(row.getCell(incidencia.getColumns()[7])));
+            dto.setSabado(columnReader.getColumnAndSumLetter(row.getCell(incidencia.getColumns()[8])));
+            dto.setDomingo(columnReader.getColumnAndSumLetter(row.getCell(incidencia.getColumns()[9])));
             dto.setPD(columnReader.getColumnPD(cell,dto));
             dto.setDT(columnReader.getColumnDT(cell,dto));
             dto.setVac(String.valueOf(columnReader.getCantidadV()));
             dto.setFaltas(String.valueOf(columnReader.getCantidadF()));
             dto.setFET(String.valueOf(columnReader.getCantidadFET()));
             dto.setComedor(String.valueOf(columnReader.getCantidadA()+columnReader.getCantidadDT()+columnReader.getCantidadFET()));
-            dto.setObservaciones(columnReader.getColumnDefaultValue(row.getCell(21)));
+            dto.setObservaciones(columnReader.getColumnDefaultValue(row.getCell(incidencia.getColumns()[10])));
         }
         return dto;
+    }
+    
+    public boolean invalidId(XSSFCell cell){
+        String value=columnReader.getValieByTypeCell(cell);
+        if(cell==null || value.isEmpty()){
+            return true;
+        }else if(Character.isLetter(value.charAt(0))){
+            return true;
+        }else{
+            return false;
+        }
     }
     
     public File getFile(String path) {

@@ -53,9 +53,9 @@ public class ExcelWriter {
             fileOut.close();
             JOptionPane.showMessageDialog(null, "Archivo guardado con exito en la ruta: \n\r"+file);
         }catch(IOException e){
-            JOptionPane.showMessageDialog(null, "Error al guardar archivo: Error 9");
+            JOptionPane.showMessageDialog(null, "Error al guardar archivo: Error 9:"+e);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Error al crear archivo: Error 15..");
+            JOptionPane.showMessageDialog(null, "Error al crear archivo: Error 15:"+e);
         }
     }
     public void fillTitles(XSSFRow row){
@@ -72,11 +72,11 @@ public class ExcelWriter {
            int line=row.getRowNum()+1;
             //Area
            XSSFCell cell = row.createCell(0, XSSFCell.CELL_TYPE_STRING);
-           cell.setCellValue("Area");
+           cell.setCellValue(dto.getArea());
 
            //Empresa
            cell = row.createCell(1, XSSFCell.CELL_TYPE_STRING);
-           cell.setCellValue("Empresa");
+           cell.setCellValue(dto.getEmpresa());
 
            //Id
            cell = row.createCell(2, XSSFCell.CELL_TYPE_STRING);
@@ -131,7 +131,7 @@ public class ExcelWriter {
 //           cell.setCellValue(Double.parseDouble(dto.getDT()));
            //DT
            cell = row.createCell(13, XSSFCell.CELL_TYPE_FORMULA);
-           cell.setCellValue("CONTAR.SI(F"+line+":L"+line+",\"DT\")+CONTAR.SI(L"+line+",\"A\")");
+           cell.setCellValue("=CONTAR.SI(F"+line+":L"+line+",\"DT\")+CONTAR.SI(L"+line+",\"A\")");
 
            //Vac
            cell = row.createCell(14, XSSFCell.CELL_TYPE_NUMERIC);

@@ -12,7 +12,6 @@ package com.reports.model;
 public class RowDTO {
     private String numero;
     private String nombre;
-    private String linea;
     private String puesto;
     private String tiempoExtra;
     private String lunes;
@@ -29,6 +28,9 @@ public class RowDTO {
     private String FET;
     private String comedor;
     private String observaciones;
+    private String observaciones2;
+    private String area;
+    private String empresa;
 
     /**
      * @return the numero
@@ -56,20 +58,6 @@ public class RowDTO {
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    /**
-     * @return the linea
-     */
-    public String getLinea() {
-        return linea;
-    }
-
-    /**
-     * @param linea the linea to set
-     */
-    public void setLinea(String linea) {
-        this.linea = linea;
     }
 
     /**
@@ -294,6 +282,48 @@ public class RowDTO {
      */
     public void setComedor(String comedor) {
         this.comedor = comedor;
+    }
+
+    /**
+     * @return the observaciones2
+     */
+    public String getObservaciones2() {
+        return observaciones2;
+    }
+
+    /**
+     * @param observaciones2 the observaciones2 to set
+     */
+    public void setObservaciones2(String observaciones2) {
+        this.observaciones2 = observaciones2;
+    }
+
+    /**
+     * @return the area
+     */
+    public String getArea() {
+        return area;
+    }
+
+    /**
+     * @param area the area to set
+     */
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    /**
+     * @return the empresa
+     */
+    public String getEmpresa() {
+        return empresa;
+    }
+
+    /**
+     * @param empresa the empresa to set
+     */
+    public void setEmpresa(String empresa) {
+        this.empresa = empresa;
     }
     
 }
