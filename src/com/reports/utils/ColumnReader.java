@@ -1,6 +1,7 @@
 package com.reports.utils;
 
 import com.reports.model.RowDTO;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
 /*
@@ -106,6 +107,9 @@ public class ColumnReader {
                     break;
                 case 4:
                      value= String.valueOf( cell.getDateCellValue());
+                    break;
+                case Cell.CELL_TYPE_FORMULA:
+                    value= String.valueOf( cell.getNumericCellValue());
                     break;
             }
         }

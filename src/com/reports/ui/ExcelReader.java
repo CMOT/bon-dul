@@ -103,7 +103,7 @@ public class ExcelReader {
                 if(dto!=null){
                     listRows.add(dto);
                     NominaPanel.progressBar.setValue(listRows.size());
-                    NominaPanel.txtAreaLog.append(dto.getArea()+"\t"+dto.getNumero() +"\t"+ dto.getNombre() + "\n\r");
+                    NominaPanel.txtAreaLog.append(dto.getTiempoExtra()+"\t"+dto.getNumero() +"\t"+ dto.getNombre() + "\n\r");
                 }
             }
         }

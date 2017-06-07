@@ -88,7 +88,7 @@ public class ExcelWriter {
 
            //TE
            cell = row.createCell(4, XSSFCell.CELL_TYPE_STRING);
-           cell.setCellValue(Double.parseDouble(dto.getTiempoExtra()));
+           cell.setCellValue(Double.parseDouble(dto.getTiempoExtra().isEmpty()?"0" :dto.getTiempoExtra()));
 
            //Lunes
            cell = row.createCell(5, XSSFCell.CELL_TYPE_STRING);
