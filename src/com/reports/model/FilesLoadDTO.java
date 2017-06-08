@@ -11,11 +11,18 @@ import java.io.File;
  *
  * @author Cesar
  */
-public class FilesLoagDTO {
+public class FilesLoadDTO {
     
     private File[] files;
     private String[] types;
+    private String[] fechas;
 
+    
+    public FilesLoadDTO(int size){
+        files= new File[size];
+        types= new String[size];
+        fechas= new String[size];
+    }
     /**
      * @return the files
      */
@@ -42,6 +49,20 @@ public class FilesLoagDTO {
      */
     public void setTypes(String[] types) {
         this.types = types;
+    }
+
+    /**
+     * @return the fechas
+     */
+    public String[] getFechas() {
+        return fechas;
+    }
+
+    /**
+     * @param fechas the fechas to set
+     */
+    public void setFechas(String[] fechas) {
+        this.fechas = fechas;
     }
     
     

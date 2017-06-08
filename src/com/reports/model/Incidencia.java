@@ -15,6 +15,7 @@ public class Incidencia {
     
     private String type;
     private int columns[];
+    private int sheets[];
     private int sheetCount;
     
     public Incidencia(String type){
@@ -22,39 +23,40 @@ public class Incidencia {
         switch(type){
             case "PRODUCCION": 
                 sheetCount=4;
+                sheets= new int[]{0,1, 2, 3};
                 columns= new int[]{ 0, 1, 4, 5, 6, 7, 8, 9, 10, 11, 21};
                 break;
             case "PROCESOS":
                 sheetCount=4;
-                columns= new int[]{0,1, 2, 3};
+                columns= new int[]{0,1, 3, 4, 5, 6, 7, 8, 9, 10, 21};
                 break;
             case "ENERGIAS":
-                sheetCount=4;
-                columns= new int[]{0,1, 2, 3};
+                sheetCount=1;
+                columns= new int[]{0,1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 21};
                 break;
             case "MANTENIMIENTO":
-                sheetCount=4;
-                columns= new int[]{0,1, 2, 3};
+                sheetCount=1;
+                columns= new int[]{0,1, 3, 4, 5, 6, 7, 8, 9, 10, 21};
                 break;    
             case "MP SUPPERS":
-                sheetCount=4;
-                columns= new int[]{0,1, 2, 3};
+                sheetCount=1;
+                columns= new int[]{0,1, 3, 4, 5, 6, 7, 8, 9, 10, 20};
                 break;
             case "MP":
-                sheetCount=4;
-                columns= new int[]{0,1, 2, 3};
+                sheetCount=1;
+                columns= new int[]{ 0, 1, 4, 5, 6, 7, 8, 9, 10, 11, 21};
                 break;
             case "SOPLADO":
-                sheetCount=4;
-                columns= new int[]{0,1, 2, 3};
+                sheetCount=1;
+                columns= new int[]{0,1, 3, 4, 5, 6, 7, 8, 9, 10, 21};
                 break;
             case "CALIDAD":
-                sheetCount=4;
-                columns= new int[]{0,1, 2, 3};
+                sheetCount=1;
+                columns= new int[]{0,1, 3, 4, 5, 6, 7, 8, 9, 10, 21};
                 break;
             case "PT":
                 sheetCount=4;
-                columns= new int[]{0,1, 2, 3};
+                columns= new int[]{4,6, 9, 10, 11, 12, 13, 14, 15, 16, 27};
                 break;
             default :
                 JOptionPane.showMessageDialog(null, "No se encontro el tipo de area: "+type);

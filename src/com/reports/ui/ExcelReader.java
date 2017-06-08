@@ -5,6 +5,7 @@
  */
 package com.reports.ui;
 
+import com.reports.model.FilesLoadDTO;
 import com.reports.model.Incidencia;
 import com.reports.utils.ColumnReader;
 import com.reports.model.RowDTO;
@@ -34,10 +35,10 @@ public class ExcelReader {
         columnReader= new ColumnReader();
     }
     
-    public int countTotalLines(File[] files){
+    public int countTotalLines(FilesLoadDTO fileDTO){
         int counter=0;
-        for (int k=0; k< files.length; k++) {
-            File actual= files[k];
+        for (int k=0; k< fileDTO.getFiles().length; k++) {
+            File actual= fileDTO.getFiles()[k];
             XSSFWorkbook hssfWorkbook = null;
             XSSFSheet hssfSheet;
              try (InputStream is = new FileInputStream(actual)) {
@@ -47,7 +48,7 @@ public class ExcelReader {
                 JOptionPane.showMessageDialog(null, "Error al leer archivo: Error 7.."+e);
             }
             if (hssfWorkbook != null) {
-                incidencia= new Incidencia("PRODUCCION");
+                incidencia= new Incidencia(fileDTO.getTypes()[k]);
 //                incidencia= new Incidencia(types[k]);
                 if(incidencia.getColumns()!=null){
                     for (int i = 0; i < incidencia.getSheetCount(); i++) {
@@ -69,10 +70,10 @@ public class ExcelReader {
         return counter;
     }
     
-    public ArrayList<RowDTO> readAllFiles(File[] files) {
+    public ArrayList<RowDTO> readAllFiles(FilesLoadDTO fileDTO) {
         
-        for (int k=0; k< files.length; k++) {
-            File actual= files[k];
+        for (int k=0; k< fileDTO.getFiles().length; k++) {
+            File actual= fileDTO.getFiles()[k];
             XSSFWorkbook hssfWorkbook = null;
             XSSFSheet hssfSheet;
             try (InputStream is = new FileInputStream(actual)) {
@@ -82,9 +83,12 @@ public class ExcelReader {
                 JOptionPane.showMessageDialog(null, "Error al leer archivo: Error 7..:"+e);
             }
             if (hssfWorkbook != null) {
-                incidencia= new Incidencia("PRODUCCION");
+                incidencia= new Incidencia(fileDTO.getTypes()[k]);
                 for (int i = 0; i < incidencia.getSheetCount(); i++) {
                     hssfSheet = hssfWorkbook.getSheetAt(i);
+                    System.out.println("nombre de hoja: "+ hssfSheet.getSheetName());
+                    NominaPanel.progressBar.setMaximum(hssfSheet.getLastRowNum());
+                    NominaPanel.progressBar.setValue(0);
                     readNotEmptyRows(hssfSheet);
                 }
             }
@@ -95,6 +99,7 @@ public class ExcelReader {
     public void readNotEmptyRows(XSSFSheet sheet) {
         RowDTO dto;
         for (int i = 0; i < sheet.getLastRowNum(); i++) {
+            NominaPanel.progressBar.setValue(i);
             columnReader= new ColumnReader();
             XSSFRow row = sheet.getRow(i);
             if (row != null) {
@@ -102,8 +107,8 @@ public class ExcelReader {
                 dto = readNotEmptyCells(row, dto);
                 if(dto!=null){
                     listRows.add(dto);
-                    NominaPanel.progressBar.setValue(listRows.size());
-                    NominaPanel.txtAreaLog.append(dto.getTiempoExtra()+"\t"+dto.getNumero() +"\t"+ dto.getNombre() + "\n\r");
+                    
+                    NominaPanel.txtAreaLog.append(dto.getArea()+"\t"+ dto.getNumero() +"\t"+ dto.getNombre() + "\n\r");
                 }
             }
         }

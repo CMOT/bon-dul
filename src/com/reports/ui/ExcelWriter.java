@@ -68,8 +68,9 @@ public class ExcelWriter {
     }
     
     public void fillRow(XSSFRow row, RowDTO dto){
+        int line=0;
         try{
-           int line=row.getRowNum()+1;
+           line=row.getRowNum()+1;
             //Area
            XSSFCell cell = row.createCell(0, XSSFCell.CELL_TYPE_STRING);
            cell.setCellValue(dto.getArea());
@@ -173,7 +174,7 @@ public class ExcelWriter {
            cell = row.createCell(23, XSSFCell.CELL_TYPE_NUMERIC);
            cell.setCellValue(40);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Error al Crear datos: Error 10: "+ e);
+            JOptionPane.showMessageDialog(null, "Error en la linea:"+line+": Crear datos: Error 10: "+ e);
         }
     }
    
