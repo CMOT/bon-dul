@@ -31,6 +31,8 @@ public class RowDTO {
     private String observaciones2;
     private String area;
     private String empresa;
+    private boolean nominaQuincenal;
+    private String nameFile;
 
     /**
      * @return the numero
@@ -85,7 +87,12 @@ public class RowDTO {
      * @param tiempoExtra the tiempoExtra to set
      */
     public void setTiempoExtra(String tiempoExtra) {
-        this.tiempoExtra = tiempoExtra;
+        if(tiempoExtra.equalsIgnoreCase("")){
+            this.tiempoExtra = "0";
+        }else{
+            this.tiempoExtra = tiempoExtra;
+        }
+        
     }
 
     /**
@@ -324,6 +331,34 @@ public class RowDTO {
      */
     public void setEmpresa(String empresa) {
         this.empresa = empresa;
+    }
+
+    /**
+     * @return the nominaQuincenal
+     */
+    public boolean isNominaQuincenal() {
+        return nominaQuincenal;
+    }
+
+    /**
+     * @param nominaQuincenal the nominaQuincenal to set
+     */
+    public void setNominaQuincenal(boolean nominaQuincenal) {
+        this.nominaQuincenal = nominaQuincenal;
+    }
+
+    /**
+     * @return the nameFile
+     */
+    public String getNameFile() {
+        return nameFile;
+    }
+
+    /**
+     * @param nameFile the nameFile to set
+     */
+    public void setNameFile(String nameFile) {
+        this.nameFile = nameFile;
     }
     
 }

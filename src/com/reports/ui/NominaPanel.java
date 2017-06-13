@@ -15,6 +15,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -29,7 +31,7 @@ public class NominaPanel extends javax.swing.JPanel {
     JFileChooser fileChooser;
     ArrayList<RowDTO> listRows;
     File[] files;
-    DefaultTableModel model;
+    DefaultTableModel model, modelResults;
     String areas[];
     FilesLoadDTO fileDTO;
     /**
@@ -37,12 +39,19 @@ public class NominaPanel extends javax.swing.JPanel {
      */
     public NominaPanel() {
         initComponents();
+        areas= new String[]{"PRODUCCION", "ENERGIAS", "MANTENIMIENTO","MP SUPERS", "MP", "PROCESOS", "CALIDAD", "PT", "SOPLADO"};
         fileChooser = new JFileChooser();
         FileNameExtensionFilter filtroExcel=new FileNameExtensionFilter("Xlsx","xlsx");
         fileChooser.setFileFilter(filtroExcel);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        JComboBox jcb=new JComboBox(areas);
+        jcb.setSelectedIndex(0);
+        TableColumn tc=  tableFiles.getColumnModel().getColumn(1);
+        TableCellEditor tce= new DefaultCellEditor(jcb);
+        tc.setCellEditor(tce);
         model=(DefaultTableModel) tableFiles.getModel();
-        areas= new String[]{"PRODUCCION", "ENERGIAS", "MANTENIMIENTO","MP SUPERS", "MP", "PROCESOS", "CALIDAD", "PT", "SOPLADO"};
+        modelResults=(DefaultTableModel) tableResults.getModel();
+        
     }
 
     /**
@@ -56,11 +65,11 @@ public class NominaPanel extends javax.swing.JPanel {
 
         progressBar = new javax.swing.JProgressBar();
         btnLoadFiles = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txtAreaLog = new javax.swing.JTextArea();
         btnExport = new javax.swing.JButton();
         btnGenerar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
+        tableResults = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
         tableFiles = new javax.swing.JTable();
 
         btnLoadFiles.setText("Cargar archivos");
@@ -69,11 +78,6 @@ public class NominaPanel extends javax.swing.JPanel {
                 btnLoadFilesActionPerformed(evt);
             }
         });
-
-        txtAreaLog.setEditable(false);
-        txtAreaLog.setColumns(20);
-        txtAreaLog.setRows(5);
-        jScrollPane1.setViewportView(txtAreaLog);
 
         btnExport.setText("Exportar");
         btnExport.setEnabled(false);
@@ -91,6 +95,16 @@ public class NominaPanel extends javax.swing.JPanel {
             }
         });
 
+        tableResults.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null}
+            },
+            new String [] {
+                "Area", "Empresa", "No. Empleado", "Nombre", "TE"
+            }
+        ));
+        jScrollPane2.setViewportView(tableResults);
+
         tableFiles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null}
@@ -99,48 +113,51 @@ public class NominaPanel extends javax.swing.JPanel {
                 "Archivo", "Area", "Fecha de la semana"
             }
         ));
-        jScrollPane2.setViewportView(tableFiles);
+        jScrollPane3.setViewportView(tableFiles);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addComponent(btnExport, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(progressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnGenerar)
-                                    .addComponent(btnLoadFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(jScrollPane2))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 833, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExport)))
+                        .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 831, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnLoadFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnGenerar)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnLoadFiles)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnGenerar)
-                        .addGap(0, 43, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(148, 148, 148)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGenerar)
+                    .addComponent(btnLoadFiles))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnExport)
                 .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(368, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -159,22 +176,22 @@ public class NominaPanel extends javax.swing.JPanel {
                 fileDTO= new FilesLoadDTO(files.length);
                 for(int i=0; i<files.length; i++){
                     String name=files[i].getName();
-                    DefaultCellEditor defaultCellEditor=new DefaultCellEditor(new JComboBox(areas));
+                    JComboBox jcb=new JComboBox(areas);
+                    jcb.setSelectedIndex(0);
+                    TableCellEditor defaultCellEditor=new DefaultCellEditor(jcb);
                     tableFiles.getColumnModel().getColumn(1).setCellEditor(defaultCellEditor);
-                        model.addRow(new Object[]{name, new JComboBox(areas), name.substring(!name.contains("semana")?0:name.indexOf("semana"), !name.contains("2017")?0:name.indexOf("2017") )});
+                        model.addRow(new Object[]{name, defaultCellEditor, name.substring(!name.contains("semana")?0:name.indexOf("semana"), !name.contains("2017")?0:name.indexOf("2017") )});
                 }
-                    
                 tableFiles.setModel(model);
                 reader= new ExcelReader();
 //                totalLines=reader.countTotalLines(files);
 //                System.out.println("tamaño archivos "+totalLines);
 //                progressBar.setMaximum(totalLines);
-                txtAreaLog.setText("");
-                if(model.getRowCount()>0){
-                    btnGenerar.setEnabled(true);
-                }else{
-                    btnGenerar.setEnabled(false);
-                }
+            }
+            if(model.getRowCount()>0){
+                btnGenerar.setEnabled(true);
+            }else{
+                btnGenerar.setEnabled(false);
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Error al cargar archivos: Error 1:"+e);
@@ -185,14 +202,32 @@ public class NominaPanel extends javax.swing.JPanel {
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
         try{
             fileChooser.setMultiSelectionEnabled(false);
-            int opcion=fileChooser.showSaveDialog(this);
-            if(opcion==JFileChooser.APPROVE_OPTION){
-                File file = fileChooser.getSelectedFile();
-                writer= new ExcelWriter();
-                writer.createConsolidado(file.getAbsolutePath(), listRows);    
-                fileChooser.setSelectedFile(null);
-                btnGenerar.setEnabled(true);
+            fileChooser.setSelectedFile(null);
+            fileChooser.setSelectedFiles(null);
+            
+            if(reader.listRowsLiquimex.size()>0){
+                JOptionPane.showMessageDialog(null, "Seleccione la ruta para el consolidado SEMANAL(LIQUIMEX)");
+                int opcion=fileChooser.showSaveDialog(this);
+                if(opcion==JFileChooser.APPROVE_OPTION){
+                    File fileLIQUIMEX = fileChooser.getSelectedFile();
+                    writer= new ExcelWriter();
+                    writer.createConsolidado(fileLIQUIMEX.getAbsolutePath(), reader.listRowsLiquimex);
+                    fileChooser.setSelectedFile(null);
+                }
             }
+            
+            if(reader.listRowsOAM.size()>0){
+                JOptionPane.showMessageDialog(null, "Seleccione la ruta para el consolidado QUINCENAL(OAM)");
+                int opcion2=fileChooser.showSaveDialog(this);
+                if(opcion2==JFileChooser.APPROVE_OPTION){
+                    File fileOAM = fileChooser.getSelectedFile();
+                    writer= new ExcelWriter();
+                    writer.createConsolidado(fileOAM.getAbsolutePath(), reader.listRowsOAM);
+                    fileChooser.setSelectedFile(null);
+                }
+            }
+            btnGenerar.setEnabled(true);
+            
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Error al exportar: Error 6:"+e);
         }
@@ -200,16 +235,24 @@ public class NominaPanel extends javax.swing.JPanel {
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
         try{
+            reader= new ExcelReader();
+            modelResults=createNewTableResultsModel();
+            for(int i=0; i< modelResults.getRowCount();i++){
+                    modelResults.removeRow(i);
+            }
+            tableResults.setModel(modelResults);
             if(files!=null){
                 for(int i=0; i<files.length; i++){
                     fileDTO.getFiles()[i]=files[i];
                     fileDTO.getTypes()[i]= model.getValueAt(i, 1).toString();
                     fileDTO.getFechas()[i]=model.getValueAt(i, 2).toString();
                 }
-                    
                 btnLoadFiles.setEnabled(false);
-                btnGenerar.setEnabled(false);
+//                if(tableResults.getRowCount()<1){
+//                    btnGenerar.setEnabled(false);
+//                }
                 listRows=reader.readAllFiles(fileDTO);
+                tableResults.removeAll();
                 fileChooser.setSelectedFile(null);
                 fileChooser.setSelectedFiles(null);
                 btnExport.setEnabled(true);
@@ -220,15 +263,32 @@ public class NominaPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnGenerarActionPerformed
 
+    public DefaultTableModel createNewTableFilesModel(){
+        return new DefaultTableModel(new Object [][] {
+                {null, null, null}
+            },
+            new String [] {
+                "Archivo", "Area", "Fecha de la semana"
+            });
+    }
+    
+    public DefaultTableModel createNewTableResultsModel(){
+        return new DefaultTableModel(new Object [][] {
+            {null, null, null}
+        },
+        new String [] {
+            "Area", "Empresa", "No. Empleado", "Nombre", "TE"
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExport;
     private javax.swing.JButton btnGenerar;
     private javax.swing.JButton btnLoadFiles;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     public static javax.swing.JProgressBar progressBar;
     private javax.swing.JTable tableFiles;
-    public static javax.swing.JTextArea txtAreaLog;
+    public static javax.swing.JTable tableResults;
     // End of variables declaration//GEN-END:variables
 }
